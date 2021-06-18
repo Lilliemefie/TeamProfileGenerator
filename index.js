@@ -7,6 +7,7 @@ const Engineer = require('./lib/Engineer.js');
 const Intern = require('./lib/Intern.js');
 const Manager = require('./lib/Manager.js');
 
+//create empty array to push user answers to prompts to
 const team = [];
 
 //create askManager fn to create an array of questions for user input (Manager)
@@ -41,7 +42,7 @@ const askManager = () => {
         })
 }
 
-//create askRole fn to 
+//create askRole fn to let the user select a role
 const askRole = () => {
     return inquirer
         .prompt([
@@ -128,7 +129,6 @@ const askIntern = () => {
             askRole();
         })
 }
-
 
 
 
