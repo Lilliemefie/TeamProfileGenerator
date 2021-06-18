@@ -1,13 +1,15 @@
+//require inquirer for prompt questions
 const inquirer = require('inquirer');
+// fs is a Node standard library package for reading and writing files
 const fs = require('fs');
 
 const Engineer = require('./lib/Engineer.js');
 const Intern = require('./lib/Intern.js');
 const Manager = require('./lib/Manager.js');
 
-const employee = [];
+const team = [];
 
-//create an array of questions for user input (Manager)
+//create askManager fn to create an array of questions for user input (Manager)
 const askManager = () => {
     return inquirer
         .prompt([
@@ -34,61 +36,103 @@ const askManager = () => {
         ])
         .then(answers => {
             const newMng = new Manager(answers.name, answers.id, answers.email, answers.number);
-            employee.push(newMng);
-            newRole();
+            team.push(newMng);
+            askRole();
         })
 }
 
-//create newRole fn, same as askManager but diff questions
-const newRole = () => {
+//create askRole fn to 
+const askRole = () => {
     return inquirer
         .prompt([
             {
                 type: 'list',
-                message: "What is your role?",
-                choices: ['Engineer', 'Intern', 'Finish and exit'],
+                message: "Which type of team member would you like to add? (use arrow key)",
+                choices: ["Engineer", "Intern", "I don't want to add anymore team member."],
                 name: 'role',
             }
         ])
         .then(answers => {
             if (answers.role === 'Engineer') {
-                newEngineer();
+                askEngineer();
             } else if
                 (answers.role === 'Intern') {
-                newIntern();
+                askIntern();
             } else {
-                fs.writeFileSync('./dist.team.html', render(employee), 'UTF');
+                buildTeam();
             }
         })
 
 }
 
-//create an array of questions for user input (Engineer)
-const newEngineer = () => {
+//create askEngineer fn to create an array of questions for user input (Engineer)
+const askEngineer = () => {
     return inquirer
         .prompt([
             {
                 type: 'input',
-                message: 'What is your gitHub username?',
-                name: 'github',
+                message: "What is your engineer's name?",
+                name: 'name',
             },
             {
                 type: 'input',
-                message: 'What is your gitHub username?',
+                message: "What is your engineer's id?",
+                name: 'id',
+            },
+            {
+                type: 'input',
+                message: "What is your engineer's email?",
+                name: 'email',
+            },
+            {
+                type: 'input',
+                message: "What is your engineer's GitHub username?",
                 name: 'github',
             },
-
         ])
         .then(answers => {
-            const newEng = new Engineer(answers.github);
-            employee.push(newEng);
-            newRole();
+            const newEng = new Engineer(answers.name, answers.id, answers.email, answers.github);
+            team.push(newEng);
+            askRole();
         })
 }
 
-//create an array of questions for user input (Intern)
+//create askIntern fn to create an array of questions for user input (Engineer)
+const askIntern = () => {
+    return inquirer
+        .prompt([
+            {
+                type: 'input',
+                message: "What is your intern's name?",
+                name: 'name',
+            },
+            {
+                type: 'input',
+                message: "What is your intern's id?",
+                name: 'id',
+            },
+            {
+                type: 'input',
+                message: "What is your intern's email?",
+                name: 'email',
+            },
+            {
+                type: 'input',
+                message: "What is your intern's school?",
+                name: 'school',
+            },
+        ])
+        .then(answers => {
+            const newInt = new Intern(answers.name, answers.id, answers.email, answers.school);
+            team.push(newInt);
+            askRole();
+        })
+}
 
 
+
+
+//fn buildteam to write file to display
 
 // start prompt function
 askManager();
